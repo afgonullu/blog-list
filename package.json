@@ -4,10 +4,10 @@
   "description": "Project for Full Stack Open Part 4 - blog list",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "test": "jest --verbose"
   },
   "repository": {
     "type": "git",
@@ -29,5 +29,8 @@
   "devDependencies": {
     "eslint": "^7.13.0",
     "nodemon": "^2.0.6"
+  },
+  "jest": {
+    "testEnvironment": "node"
   }
 }
