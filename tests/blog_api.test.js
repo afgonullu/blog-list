@@ -129,6 +129,25 @@ describe("blog_api", () => {
     expect(titles).not.toContain(blogToDelete.content)
   })
 
+  test("a blog can be updated", async () => {
+    const blogsAtStart = await helper.blogsInDb()
+    let blogToUpdate = blogsAtStart[0]
+
+    blogToUpdate = { ...blogToUpdate, likes: 999 }
+
+    await api
+      .put(`/api/blogs/${blogToUpdate.id}`)
+      .send(blogToUpdate)
+      .expect(200)
+      .expect("Content-Type", /application\/json/)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
+
+    const likes = blogsAtEnd[0].likes
+    expect(likes).toBe(999)
+  })
+
   afterAll(() => {
     mongoose.connection.close()
   })
