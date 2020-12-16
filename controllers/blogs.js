@@ -44,7 +44,10 @@ blogsRouter.post("/", async (request, response, next) => {
     url: body.url,
     likes: body.likes | 0,
     user: user,
+    comments: [],
   })
+
+  console.log(blog)
 
   const savedBlog = await blog.save()
   user.blogs = user.blogs.concat(savedBlog._id)
@@ -62,6 +65,17 @@ blogsRouter.delete("/:id", async (request, response, next) => {
   if (userFromToken.id.toString() === blog.user.toString()) {
     logger.info("hey are equal")
     await Blog.findByIdAndRemove(request.params.id)
+
+    logger.info("token", userFromToken)
+    const updatedUser = await User.findById(userFromToken.id)
+    logger.info("upd", updatedUser)
+    const index = updatedUser.blogs.findIndex(
+      (blog) => blog == request.params.id
+    )
+    logger.info(index)
+    updatedUser.blogs.splice(index, 1)
+    await User.findByIdAndUpdate(updatedUser.id, updatedUser)
+
     response.status(204).end()
   } else {
     response.status(401).json({
